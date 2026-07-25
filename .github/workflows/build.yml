@@ -22,7 +22,6 @@ jobs:
 
     - name: Skopiuj projekt
       run: |
-        mkdir openFrameworks/apps/myApps
         xcopy . openFrameworks/apps/myApps/interactive-physarum /E /I
 
     - name: Budowanie
