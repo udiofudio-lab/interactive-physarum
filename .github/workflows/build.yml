@@ -8,30 +8,29 @@ jobs:
     runs-on: windows-latest
 
     steps:
-    - name: Checkout project
+    - name: Pobierz projekt
       uses: actions/checkout@v4
 
-    - name: Download openFrameworks
+    - name: Przejdz na wersje bez gamepada
+      run: |
+        git checkout no-gamepad
+
+    - name: Pobierz openFrameworks
       run: |
         git clone --depth 1 https://github.com/openframeworks/openFrameworks.git
 
-    - name: Download addon
-      run: |
-        cd openFrameworks/addons
-        git clone https://github.com/chrisspencer/ofxGamepad.git
-
-    - name: Copy project
+    - name: Skopiuj projekt do openFrameworks
       run: |
         mkdir openFrameworks/apps/myApps
-        xcopy interactive-physarum openFrameworks/apps/myApps/interactive-physarum /E /I
+        xcopy . openFrameworks/apps/myApps/interactive-physarum /E /I
 
-    - name: Build
+    - name: Budowanie
       run: |
         cd openFrameworks/apps/myApps/interactive-physarum
         make Release
 
-    - name: Upload
+    - name: Spakuj wynik
       uses: actions/upload-artifact@v4
       with:
-        name: interactive-physarum
+        name: interactive-physarum-build
         path: openFrameworks/apps/myApps/interactive-physarum/bin
