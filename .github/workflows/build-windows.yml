@@ -43,6 +43,7 @@ jobs:
         shell: msys2 {0}
         run: |
           cd /c/openFrameworks/scripts/msys2
+          sed -i 's/mingw-w64-x86_64-FreeImage/mingw-w64-x86_64-freeimage/g' install_dependencies.sh
           source ./install_dependencies.sh --noconfirm
 
       - name: Safety-net install of common oF deps via pacman
