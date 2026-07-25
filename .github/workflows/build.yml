@@ -22,7 +22,8 @@ jobs:
     - name: Skopiuj projekt
       shell: pwsh
       run: |
-        Copy-Item -Path "." -Destination "openFrameworks/apps/myApps/interactive-physarum" -Recurse -Force
+        New-Item -ItemType Directory -Force -Path openFrameworks/apps/myApps/interactive-physarum
+        Get-ChildItem -Exclude ".git",".github" | Copy-Item -Destination openFrameworks/apps/myApps/interactive-physarum -Recurse -Force
 
     - name: Budowanie
       run: |
