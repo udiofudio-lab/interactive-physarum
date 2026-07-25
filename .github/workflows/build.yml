@@ -11,10 +11,6 @@ jobs:
     - name: Pobierz projekt
       uses: actions/checkout@v4
 
-    - name: Przejdz na wersje bez gamepada
-      run: |
-        git checkout no-gamepad
-
     - name: Pobierz openFrameworks
       run: |
         git clone --depth 1 https://github.com/openframeworks/openFrameworks.git
