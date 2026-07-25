@@ -1,0 +1,84 @@
+name: Build Windows executable
+
+on:
+  workflow_dispatch:      # pozwala odpalić ręcznie z zakładki Actions
+  push:
+    branches: [ main ]
+
+jobs:
+  build-windows:
+    runs-on: windows-latest
+
+    env:
+      OF_VERSION: 0.11.2
+      OF_URL: https://openframeworks.cc/versions/v0.11.2/of_v0.11.2_msys2_mingw64_release.zip
+
+    steps:
+      - name: Checkout interactive-physarum
+        uses: actions/checkout@v4
+        with:
+          path: interactive-physarum-src
+
+      - name: Set up MSYS2 (mingw64)
+        uses: msys2/setup-msys2@v2
+        with:
+          msystem: MINGW64
+          update: true
+          install: >-
+            git
+            make
+            unzip
+            mingw-w64-x86_64-toolchain
+            mingw-w64-x86_64-cmake
+
+      - name: Download openFrameworks (windows mingw64 release)
+        shell: msys2 {0}
+        run: |
+          curl -L -o of.zip "$OF_URL"
+          unzip -q of.zip -d C:/
+          # ta paczka rozpakowuje się do folderu C:/of_v${OF_VERSION}_msys2_mingw64_release
+          mv "C:/of_v${OF_VERSION}_msys2_mingw64_release" C:/openFrameworks
+
+      - name: Install oF system dependencies
+        shell: msys2 {0}
+        run: |
+          cd /c/openFrameworks/scripts/msys2
+          ./install_dependencies.sh --yes || true
+
+      - name: Clone ofxGamepad addon (Bleuje fork)
+        shell: msys2 {0}
+        run: |
+          cd /c/openFrameworks/addons
+          git clone https://github.com/Bleuje/ofxGamepad.git
+
+      - name: Copy project into oF apps/myApps
+        shell: msys2 {0}
+        run: |
+          mkdir -p /c/openFrameworks/apps/myApps/interactive-physarum
+          cp -r "$GITHUB_WORKSPACE/interactive-physarum-src/"* /c/openFrameworks/apps/myApps/interactive-physarum/
+
+      - name: Build openFrameworks core libs
+        shell: msys2 {0}
+        run: |
+          cd /c/openFrameworks/libs/openFrameworksCompiled/project
+          make -j4
+
+      - name: Build interactive-physarum
+        shell: msys2 {0}
+        run: |
+          cd /c/openFrameworks/apps/myApps/interactive-physarum
+          make -j4
+
+      - name: Collect DLLs needed to run the exe
+        shell: msys2 {0}
+        run: |
+          cd /c/openFrameworks/apps/myApps/interactive-physarum/bin
+          for f in $(ldd *.exe 2>/dev/null | grep mingw64 | awk '{print $3}'); do
+            cp -n "$f" . || true
+          done
+
+      - name: Upload built executable + data
+        uses: actions/upload-artifact@v4
+        with:
+          name: interactive-physarum-windows
+          path: C:/openFrameworks/apps/myApps/interactive-physarum/bin/**
