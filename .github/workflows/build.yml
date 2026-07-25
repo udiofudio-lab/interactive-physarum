@@ -1,0 +1,31 @@
+name: Build Interactive Physarum
+
+on:
+  workflow_dispatch:
+
+jobs:
+  build:
+    runs-on: windows-latest
+
+    steps:
+    - name: Pobierz kod
+      uses: actions/checkout@v4
+
+    - name: Konfiguracja CMake
+      run: |
+        cmake -B build -S .
+
+    - name: Kompilacja
+      run: |
+        cmake --build build --config Release
+
+    - name: Spakuj wynik
+      run: |
+        mkdir output
+        copy build\Release\*.exe output\
+
+    - name: Udostępnij plik
+      uses: actions/upload-artifact@v4
+      with:
+        name: interactive-physarum-build
+        path: output
