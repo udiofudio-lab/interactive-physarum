@@ -17,12 +17,12 @@ jobs:
 
     - name: Pobierz ofxGamepad
       run: |
-        cd openFrameworks/addons
-        git clone https://github.com/Bleuje/ofxGamepad.git
+        git clone https://github.com/Bleuje/ofxGamepad.git openFrameworks/addons/ofxGamepad
 
     - name: Skopiuj projekt
+      shell: pwsh
       run: |
-        xcopy . openFrameworks/apps/myApps/interactive-physarum /E /I
+        Copy-Item -Path "." -Destination "openFrameworks/apps/myApps/interactive-physarum" -Recurse -Force
 
     - name: Budowanie
       run: |
