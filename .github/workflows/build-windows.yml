@@ -43,7 +43,21 @@ jobs:
         shell: msys2 {0}
         run: |
           cd /c/openFrameworks/scripts/msys2
-          ./install_dependencies.sh --yes || true
+          source ./install_dependencies.sh --yes
+
+      - name: Safety-net install of common oF deps via pacman
+        shell: msys2 {0}
+        run: |
+          pacman -S --needed --noconfirm \
+            mingw-w64-x86_64-cairo \
+            mingw-w64-x86_64-freetype \
+            mingw-w64-x86_64-fontconfig \
+            mingw-w64-x86_64-freeimage \
+            mingw-w64-x86_64-glew \
+            mingw-w64-x86_64-glfw \
+            mingw-w64-x86_64-openal-soft \
+            mingw-w64-x86_64-libsndfile \
+            mingw-w64-x86_64-pkg-config
 
       - name: Clone ofxGamepad addon (Bleuje fork)
         shell: msys2 {0}
