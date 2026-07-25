@@ -35,7 +35,7 @@ jobs:
         shell: msys2 {0}
         run: |
           curl -L -o of.zip "$OF_URL"
-          unzip -q of.zip -d C:/
+          unzip -o -q of.zip -d C:/
           # ta paczka rozpakowuje się do folderu C:/of_v${OF_VERSION}_msys2_mingw64_release
           mv "C:/of_v${OF_VERSION}_msys2_mingw64_release" C:/openFrameworks
 
