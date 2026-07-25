@@ -5,7 +5,7 @@ on:
 
 jobs:
   build:
-    runs-on: windows-latest
+    runs-on: ubuntu-latest
 
     steps:
     - name: Pobierz openFrameworks
@@ -13,10 +13,9 @@ jobs:
         git clone --depth 1 https://github.com/openframeworks/openFrameworks.git
 
     - name: Instaluj zależności openFrameworks
-      shell: bash
       run: |
-        cd openFrameworks/scripts/msys2
-        ./install_dependencies.sh
+        cd openFrameworks/scripts/linux/ubuntu
+        sudo ./install_dependencies.sh
 
     - name: Pobierz projekt
       run: |
@@ -27,7 +26,6 @@ jobs:
         git clone --depth 1 https://github.com/Bleuje/ofxGamepad.git openFrameworks/addons/ofxGamepad
 
     - name: Budowanie
-      shell: bash
       run: |
         cd openFrameworks/apps/myApps/interactive-physarum
         make Release
@@ -35,5 +33,5 @@ jobs:
     - name: Spakuj wynik
       uses: actions/upload-artifact@v4
       with:
-        name: interactive-physarum-build
+        name: interactive-physarum-build-linux
         path: openFrameworks/apps/myApps/interactive-physarum/bin
