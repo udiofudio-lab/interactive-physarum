@@ -43,7 +43,7 @@ jobs:
         shell: msys2 {0}
         run: |
           cd /c/openFrameworks/scripts/msys2
-          source ./install_dependencies.sh --yes
+          source ./install_dependencies.sh --noconfirm
 
       - name: Safety-net install of common oF deps via pacman
         shell: msys2 {0}
