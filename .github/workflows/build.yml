@@ -1,4 +1,4 @@
-name: Build Interactive Physarum
+name: Build Physarum
 
 on:
   workflow_dispatch:
@@ -8,24 +8,30 @@ jobs:
     runs-on: windows-latest
 
     steps:
-    - name: Pobierz kod
+    - name: Checkout project
       uses: actions/checkout@v4
 
-    - name: Konfiguracja CMake
+    - name: Download openFrameworks
       run: |
-        cmake -B build -S .
+        git clone --depth 1 https://github.com/openframeworks/openFrameworks.git
 
-    - name: Kompilacja
+    - name: Download addon
       run: |
-        cmake --build build --config Release
+        cd openFrameworks/addons
+        git clone https://github.com/chrisspencer/ofxGamepad.git
 
-    - name: Spakuj wynik
+    - name: Copy project
       run: |
-        mkdir output
-        copy build\Release\*.exe output\
+        mkdir openFrameworks/apps/myApps
+        xcopy interactive-physarum openFrameworks/apps/myApps/interactive-physarum /E /I
 
-    - name: Udostępnij plik
+    - name: Build
+      run: |
+        cd openFrameworks/apps/myApps/interactive-physarum
+        make Release
+
+    - name: Upload
       uses: actions/upload-artifact@v4
       with:
-        name: interactive-physarum-build
-        path: output
+        name: interactive-physarum
+        path: openFrameworks/apps/myApps/interactive-physarum/bin
