@@ -8,22 +8,17 @@ jobs:
     runs-on: windows-latest
 
     steps:
-    - name: Pobierz projekt
-      uses: actions/checkout@v4
-
     - name: Pobierz openFrameworks
       run: |
         git clone --depth 1 https://github.com/openframeworks/openFrameworks.git
 
+    - name: Pobierz projekt
+      run: |
+        git clone --depth 1 https://github.com/Bleuje/interactive-physarum.git openFrameworks/apps/myApps/interactive-physarum
+
     - name: Pobierz ofxGamepad
       run: |
-        git clone https://github.com/Bleuje/ofxGamepad.git openFrameworks/addons/ofxGamepad
-
-    - name: Skopiuj projekt
-      shell: pwsh
-      run: |
-        New-Item -ItemType Directory -Force -Path openFrameworks/apps/myApps/interactive-physarum
-        Get-ChildItem -Exclude ".git",".github" | Copy-Item -Destination openFrameworks/apps/myApps/interactive-physarum -Recurse -Force
+        git clone --depth 1 https://github.com/Bleuje/ofxGamepad.git openFrameworks/addons/ofxGamepad
 
     - name: Budowanie
       run: |
