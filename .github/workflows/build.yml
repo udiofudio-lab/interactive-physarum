@@ -12,6 +12,12 @@ jobs:
       run: |
         git clone --depth 1 https://github.com/openframeworks/openFrameworks.git
 
+    - name: Instaluj zależności openFrameworks
+      shell: bash
+      run: |
+        cd openFrameworks/scripts/msys2
+        ./install_dependencies.sh
+
     - name: Pobierz projekt
       run: |
         git clone --depth 1 https://github.com/Bleuje/interactive-physarum.git openFrameworks/apps/myApps/interactive-physarum
@@ -21,6 +27,7 @@ jobs:
         git clone --depth 1 https://github.com/Bleuje/ofxGamepad.git openFrameworks/addons/ofxGamepad
 
     - name: Budowanie
+      shell: bash
       run: |
         cd openFrameworks/apps/myApps/interactive-physarum
         make Release
